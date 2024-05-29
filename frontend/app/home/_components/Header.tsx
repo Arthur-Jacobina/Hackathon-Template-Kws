@@ -3,8 +3,8 @@ import ConnectWallet from "./ConnectWallet";
 
 export default function Header() {
     return(
-        <div className="flex flex-row ml-10 px-5 gap-20 items-center mr-20 w-full justify-center">
-           <div className="w-3/5 flex flex-row items-center gap-20 mr-20">
+        <div className="flex ml-10 px-5 items-center w-[100vw]">
+           <div className="w-3/5 flex items-center space-x-10">
            <Image
               src="/kws.svg"
               alt=""
@@ -13,14 +13,14 @@ export default function Header() {
               height={65}
               priority
             /> 
-            <a href="https://github.com/Arthur-Jacobina" className="hover:text-[#3B82F6]">GitHub</a>
-            <a className="hover:text-[#3B82F6]">FundMe</a>
+            <a href="https://github.com/Arthur-Jacobina" target="_blank" className="text-[#7391B0] hover:text-[#3B82F6]">GitHub</a>
+            <a className="text-[#7391B0] hover:text-[#3B82F6]">BuyMeACoffee</a>
+            <a className="text-[#7391B0] hover:text-[#3B82F6] ">NFT</a>
             </div>
-            
-            <div className="ml-20">
+            <div className="w-1/5">
+
+            </div>
             <ConnectWallet />
-            </div>
-            
         </div>
     )
 }
