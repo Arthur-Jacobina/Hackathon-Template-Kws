@@ -5,6 +5,11 @@ import { useState } from "react";
 
 export default function Coffee() {
     const [coffeeCount, setCoffeeCount] = useState(0);
+
+    function handleTextareaChange(e:any) {
+        setCoffeeCount(e.target.value);
+    }
+
     return(
         <div className="px-20 py-5 w-[30vw] flex flex-col space-y-5 justify-center bg-[#151C30] rounded-xl">
             <div className="text-white font-semibold text-xl">
@@ -25,28 +30,28 @@ export default function Coffee() {
                 </div>
                 <label>
                     <button className='peer' name='coffees' onClick={() => setCoffeeCount(1)}>
-                    <div className="w-10 h-10 rounded-full flex items-center justify-center text-white border-[#7391B0] border-[1px] bg-[#0F172A] hover:border-[#3B82F6] peer-checked:font-semibold peer-checked:bg-[#3B82F6]">
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white border-[#7391B0] border-[1px] hover:border-[#3B82F6] ${coffeeCount === 1 ? 'bg-[#3B82F6]' : 'bg-[#0F172A]'}`}>
                         1
                     </div>
                     </button>
                 </label>
                 <label>
                     <button className='peer' name='coffees' onClick={() => setCoffeeCount(3)}>
-                    <div className="w-10 h-10 rounded-full flex items-center justify-center text-white border-[#7391B0] border-[1px] bg-[#0F172A] hover:border-[#3B82F6] peer-checked:font-semibold peer-checked:bg-[#3B82F6]">
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white border-[#7391B0] border-[1px] hover:border-[#3B82F6] ${coffeeCount === 3 ? 'bg-[#3B82F6]' : 'bg-[#0F172A]'}`}>
                         3
                     </div>
                     </button>
                 </label>
                 <label>
                     <button className='peer' name='coffees' onClick={() => setCoffeeCount(5)}>
-                    <div className="w-10 h-10 rounded-full flex items-center justify-center text-white border-[#7391B0] border-[1px] bg-[#0F172A] hover:border-[#3B82F6] peer-checked:font-semibold peer-checked:bg-[#3B82F6]">
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white border-[#7391B0] border-[1px] hover:border-[#3B82F6] ${coffeeCount === 5 ? 'bg-[#3B82F6]' : 'bg-[#0F172A]'}`}>
                         5
                     </div>
                     </button>
                 </label>
                 <label>
                     <div className="justify-center">
-                    <input className='[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none w-10 h-10 overflow-hidden rounded-lg flex items-center text-center justify-center text-white border-[#000000] border-[1px] bg-[#0F172A] text-[#818181] outline-none focus:border-[#3B82F6] hover:border-[#3B82F6]' name='coffees' type='number' placeholder="10"/>
+                    <input className='[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none w-10 h-10 overflow-hidden rounded-lg flex items-center text-center justify-center text-white border-[#000000] border-[1px] bg-[#0F172A] text-[#818181] outline-none focus:border-[#3B82F6] hover:border-[#3B82F6]' name='coffees' type='number' placeholder={coffeeCount.toString()} onChange={handleTextareaChange}/>
                     </div>
                 </label>
             </div>
