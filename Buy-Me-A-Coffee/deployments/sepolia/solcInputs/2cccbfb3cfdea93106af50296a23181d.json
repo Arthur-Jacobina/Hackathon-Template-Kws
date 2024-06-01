@@ -1,0 +1,42 @@
+{
+  "language": "Solidity",
+  "sources": {
+    "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol": {
+      "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.0;\n\n// solhint-disable-next-line interface-starts-with-i\ninterface AggregatorV3Interface {\n  function decimals() external view returns (uint8);\n\n  function description() external view returns (string memory);\n\n  function version() external view returns (uint256);\n\n  function getRoundData(\n    uint80 _roundId\n  ) external view returns (uint80 roundId, int256 answer, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound);\n\n  function latestRoundData()\n    external\n    view\n    returns (uint80 roundId, int256 answer, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound);\n}\n"
+    },
+    "contracts/BuyMeACoffee.sol": {
+      "content": "// SPDX-License-Identifier: MIT\r\n\r\npragma solidity ^0.8.0;\r\n\r\nimport \"./PriceConverter.sol\";\r\n\r\nstruct Funder {\r\n    uint256 numCoffees;\r\n    address userAddress;\r\n}\r\n\r\ncontract BuyMeACoffee {\r\n    using PriceConverter for uint256;\r\n    Funder[] public funders;\r\n    address public owner;\r\n    uint256 public price;\r\n\r\n    uint256 public coffee = 10e18;\r\n\r\n    error InsufficientFunds();\r\n    error OnlyOwner();\r\n\r\n    event BuyMeACoffeeEvent(address buyer, uint256 value);\r\n    event NewFunder(address userAddress, uint256 time, uint256 numCoffees);\r\n\r\n    constructor() {\r\n        owner = msg.sender;\r\n        price = coffee.getConvertionRate();\r\n    }\r\n\r\n    function buyCoffee(uint256 numCoffees) public payable {\r\n        if (msg.value < price * numCoffees) {\r\n            revert InsufficientFunds();\r\n        }\r\n        \r\n        emit BuyMeACoffeeEvent(msg.sender, msg.value);\r\n\r\n        funders.push(Funder(numCoffees, msg.sender));\r\n\r\n        emit NewFunder(msg.sender, block.timestamp, numCoffees);\r\n    }\r\n\r\n    function withdraw() public {\r\n        if (msg.sender != owner) {\r\n            revert OnlyOwner();\r\n        }\r\n\r\n        if (address(this).balance == 0) {\r\n            revert InsufficientFunds();\r\n        }\r\n\r\n        (bool sent,) = owner.call{value: address(this).balance}(\"\");\r\n        require(sent, \"Failed to send Ether\");\r\n    }\r\n}"
+    },
+    "contracts/PriceConverter.sol": {
+      "content": "// SPDX-License-Identifier: MIT\r\n\r\npragma solidity ^0.8.0;\r\n\r\nimport {AggregatorV3Interface} from \"@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol\";\r\n\r\nlibrary PriceConverter {\r\n    function getChainLinkLatestAnswer() public view returns(uint256) {\r\n        AggregatorV3Interface dataFeed = AggregatorV3Interface(0x694AA1769357215DE4FAC081bf1f309aDC325306);\r\n\r\n        (\r\n            /* uint80 roundID */,\r\n            int answer,\r\n            /*uint startedAt*/,\r\n            /*uint timeStamp*/,\r\n            /*uint80 answeredInRound*/\r\n        ) = dataFeed.latestRoundData();\r\n        return uint256(answer);\r\n    }\r\n    \r\n    function getConvertionRate(uint256 usdAmount) internal view returns(uint256) {\r\n        uint256 ethPrice = getChainLinkLatestAnswer();\r\n        uint256 usdAmountinEth = ((usdAmount*1e8)/ethPrice);\r\n        return usdAmountinEth;\r\n    }\r\n}"
+    }
+  },
+  "settings": {
+    "evmVersion": "paris",
+    "optimizer": {
+      "enabled": false,
+      "runs": 200
+    },
+    "outputSelection": {
+      "*": {
+        "*": [
+          "abi",
+          "evm.bytecode",
+          "evm.deployedBytecode",
+          "evm.methodIdentifiers",
+          "metadata",
+          "devdoc",
+          "userdoc",
+          "storageLayout",
+          "evm.gasEstimates"
+        ],
+        "": [
+          "ast"
+        ]
+      }
+    },
+    "metadata": {
+      "useLiteralContent": true
+    }
+  }
+}
